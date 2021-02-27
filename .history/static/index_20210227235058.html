@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>After School Club</title>
+    <script src="https://unpkg.com/vue"></script>
+    <!--Link to manifest-->
+    <link rel="manifest" crossorigin="use-credentials" href="lsn.json">
+</head>
+<body>
+    <script>
+        if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service.js');
+        };
+    </script>
+    <div id="app">
+        <!-- displaying lessons -->
+        <div v-for="array in lessons" style="display: inline-block; padding: 8px;">
+            </ul>
+            <div style="border:solid; border-color:lightblue; height:60px; width:auto; padding:8px;">
+                <li>topic: {{array.topic}}</li>
+                <li>location: {{array.location}}</li>
+                <li>price: {{array.price}}</li>
+            </div>
+            </ul>
+        </div>
+    </div>
+
+    <!--Javascript-->
+    <script>
+        //Setting up Vue
+        let app = new Vue({ //vue instance
+            el: '#app',
+            data: {
+                lessons: [],
+            
+            },
+            methods: {
+                getLessons: function() {
+                    //Fetching data from API
+                    fetch('http://localhost:3000/lessons').then(
+                        function(response) {
+                            response.json().then(
+                                function(json) {
+                                    // save the returned JSON object to 'lessons'
+                                    app.lessons = json;
+                                });
+                        })
+                }
+            },
+            beforeMount() {
+                this.getLessons()
+            }
+        });
+    </script>
+</body>
+</html>
